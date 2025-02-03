@@ -42,6 +42,9 @@ predictions = generate_predictions(test_dataset)
 # Evaluate predictions
 correct_predictions = 0
 total_predictions = len(predictions)
+different = []
+different_input = []
+different_output = []
 
 # Compare the generated predictions to the expected outputs
 for input_text, predicted_output, expected_output in predictions:
@@ -50,9 +53,23 @@ for input_text, predicted_output, expected_output in predictions:
     print(f"Expected: {expected_output}")
     print("-" * 50)
     
+    cleaned_predicted_output = predicted_output.replace("Humor generation: ", "").strip()
+    cleaned_input_text = input_text.replace("Humor generation: ", "").strip()
+
+    if cleaned_predicted_output != cleaned_input_text:
+        different.append(cleaned_predicted_output)
+        different_input.append(cleaned_input_text)
+        different_output.append(expected_output)
+
     if predicted_output.strip() == expected_output.strip():
         correct_predictions += 1
 
 # Calculate and print the accuracy
-accuracy = correct_predictions / total_predictions * 100
+accuracy = correct_predictions / total_predictions * 10
+for i in range(len(different)):
+    print(f"Different from input" )
+    print(different[i])    
+    print(different_input[i])
+    print(different_output[i])
+    
 print(f"Test accuracy: {accuracy:.2f}% ({correct_predictions}/{total_predictions} correct)")

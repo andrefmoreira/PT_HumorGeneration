@@ -1,5 +1,5 @@
 import torch
-from transformers import T5Tokenizer, T5ForConditionalGeneration, Trainer, TrainingArguments
+from transformers import T5Tokenizer, T5ForConditionalGeneration, Trainer, TrainingArguments,DataCollatorForSeq2Seq,Seq2SeqTrainingArguments, Seq2SeqTrainer
 from datasets import load_from_disk, DatasetDict
 import os
 import gc
@@ -37,14 +37,15 @@ def preprocess_data(examples):
     targets = examples['transformed']
 
     # Tokenize inputs and outputs
-    model_inputs = tokenizer(inputs, max_length=256, truncation=True, padding='max_length')
-    labels = tokenizer(targets, max_length=256, truncation=True, padding='max_length')
+    model_inputs = tokenizer(inputs, max_length=256, truncation=True, padding='max_length', return_tensors="pt")
+    labels = tokenizer(targets, max_length=256, truncation=True, padding='max_length', return_tensors="pt")
 
     # Replace padding token IDs in labels with -100
-    labels["input_ids"] = [
-        [(label if label != tokenizer.pad_token_id else -100) for label in label_seq] 
-        for label_seq in labels["input_ids"]
-    ]
+    #labels["input_ids"] = [
+    #    [(label if label != tokenizer.pad_token_id else -100) for label in label_seq] 
+    #    for label_seq in labels["input_ids"]
+    #]
+
     model_inputs["labels"] = labels["input_ids"]
 
     return model_inputs
@@ -53,26 +54,27 @@ def preprocess_data(examples):
 tokenized_train_dataset = tokenized_dataset["train"].map(preprocess_data, batched=True, load_from_cache_file=False)
 tokenized_validation_dataset = tokenized_dataset["validation"].map(preprocess_data, batched=True, load_from_cache_file=False)
 
+
+data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 # Set training arguments
-training_args = TrainingArguments(
+training_args = Seq2SeqTrainingArguments(
     output_dir=output_dir,
-    evaluation_strategy="epoch",
-    learning_rate=2e-5,
-    per_device_train_batch_size=4,  # Adjust batch size based on your system's capacity
-    per_device_eval_batch_size=4,
-    num_train_epochs=6,
-    weight_decay=0.01,
-    logging_dir=f"{output_dir}/logs",
-    logging_steps=10,
-    save_strategy="epoch",
+    overwrite_output_dir=True,
+    num_train_epochs=200,
+    learning_rate=1e-3,
+    save_total_limit=1,
+    eval_steps=0.1,
+    predict_with_generate=True,
 )
 
+
 # Initialize the Trainer
-trainer = Trainer(
+trainer = Seq2SeqTrainer(
     model=model,
     args=training_args,
     train_dataset=tokenized_train_dataset,
     eval_dataset=tokenized_validation_dataset,
+    data_collator=data_collator,
 )
 
 # Train the model
