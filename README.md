@@ -50,23 +50,27 @@ Here’s how to set up the project locally:
    cd PT_HumorGeneration
 
 2. (Optional) Create a virtual environment
+   ```bash
     python3 -m venv venv
     source venv/bin/activate
 
-3. Install dependencies
+4. Install dependencies
+    ```bash
     pip install -r requirements.txt
 
-4. Download or prepare any required model checkpoints / data if needed.
+5. Download or prepare any required model checkpoints / data if needed.
 
 
 ## Usage
 
-from model import HumorGenerator  # adjust according to your module structure
-
-# load model
-gen = HumorGenerator.from_pretrained('path/to/fine_tuned_t5_model')
-
-# generate humor
-prompt = "Insira aqui o seu prompt engraçado em português"
-output = gen.generate(prompt, max_length=100, temperature=0.9)
-print(output)
+Here's the code you need to run to be able to use the model
+  ```bash
+  from model import HumorGenerator  # adjust according to your module structure
+  
+  # load model
+  gen = HumorGenerator.from_pretrained('path/to/fine_tuned_t5_model')
+  
+  # generate humor
+  prompt = "Insira aqui o seu prompt engraçado em português"
+  output = gen.generate(prompt, max_length=100, temperature=0.9)
+  print(output)
