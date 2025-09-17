@@ -11,13 +11,8 @@ T5 fine-tuned model to generate Portuguese humor.
 - [Getting Started](#getting-started)  
   - [Prerequisites](#prerequisites)  
   - [Installation](#installation)  
-- [Usage](#usage)  
-- [Evaluation](#evaluation)  
-- [Examples](#examples)  
-- [Contributing](#contributing)  
-- [License](#license)  
-- [Contact](#contact)
-
+- [Usage](#usage)
+  
 ---
 
 ## About
