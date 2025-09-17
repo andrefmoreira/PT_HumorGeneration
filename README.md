@@ -28,14 +28,14 @@ pip install -r requirements.txt
 
 ### Training the model
 
-1. Make sure the preprocessed datasets are available in ./processed_datasets/ with train, validation, and test folders.
+1. Create the dataset splits using the create_datasets.py
 
 2. Run the training script:
    ```bin
-   python train_t5_humor.py
+   python PTT5.py
    ```
 This will train the model and save it in ./t5_humor_pt_model.
 
 ### Usage
 
-After training the model you can either run the code using either the Test_input_PTT5.py or the Test_dataset_PTT5.py.
+1. Test the model using either Test_input_PTT5.py or the Test_dataset_PTT5.py.
